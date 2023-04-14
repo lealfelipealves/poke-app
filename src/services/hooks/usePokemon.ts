@@ -1,51 +1,34 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { api } from '../api';
-
-export type Pokemon = {
-  name: string;
-  url: string;
-}
+import axios, { AxiosResponse } from 'axios';
+import { Pokemon } from 'pokenode-ts'
 
 type GetPokemonResponse = {
-  count: number;
   next?: number;
   previous?: number;
   pokemons: Pokemon[];
 }
 
-const PAGINATION_LIMIT = 12;
+const PAGINATION_LIMIT = 20;
 
 export async function getPokemon({ pageParam = 1 }): Promise<GetPokemonResponse> {
-  let next = undefined;
-  let previous = undefined;
-  const { data } = await api.get('pokemon', {
-    params: {
-      limit: PAGINATION_LIMIT,
-      offset: pageParam,
-    },
-  });
+  const countInitial = ((PAGINATION_LIMIT * pageParam) - PAGINATION_LIMIT) + 1;
+  const countMaximum = (PAGINATION_LIMIT * pageParam) + 1;
+  let endpoints = [];
 
-  if(data.next !== null) {
-    const nextURL = new URLSearchParams(new URL(data.next).search);
-    next = Number(nextURL.get("offset"));
+  for(let i = countInitial; i <= countMaximum; i++) {
+    endpoints.push(`pokemon/${i}`)
   }
 
-  if(data.previous !== null) {
-    const previousURL = new URLSearchParams(new URL(data.previous).search);
-    previous = Number(previousURL.get("offset"));
-  }
+  const requests = endpoints.map(endpoint => api.get(endpoint));
+  const responses: AxiosResponse<Pokemon>[]  = await axios.all(requests);
 
-  const pokemons = data.results.map((pokemon: any) => {
-    return {
-      name: pokemon.name,
-      url: pokemon.url,
-    }
-  });
-
+  const pokemons = axios.spread<AxiosResponse<Pokemon>, Pokemon[]>((...responses) => {
+    return responses.map(response => response.data);
+  })(responses);
+  
   return {
-    count: data.count,
-    next,
-    previous,
+    next: pageParam + 1,
     pokemons
   };
 }
@@ -56,7 +39,6 @@ export function usePokemonQuery(page: number) {
     queryFn: getPokemon,
     staleTime: 1000 * 60 * 10, // 10 minutes,
     keepPreviousData: true,
-    getPreviousPageParam: (firstPage) => firstPage.previous,
-    getNextPageParam: (lastPage) => lastPage.next
+    getNextPageParam: (lastPage) => lastPage.next,
   });
 }

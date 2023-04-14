@@ -13,11 +13,8 @@ export default function Home() {
     error,
     isFetching,
     isFetchingNextPage,
-    isFetchingPreviousPage,
     fetchNextPage,
-    fetchPreviousPage,
     hasNextPage,
-    hasPreviousPage
   } = usePokemonQuery(page);
 
   useEffect(() => {
@@ -36,18 +33,6 @@ export default function Home() {
           <p>Error: erro</p>
         ) : (
           <div className="flex flex-col">
-            <div>
-              <button
-                onClick={() => fetchPreviousPage()}
-                disabled={!hasPreviousPage || isFetchingPreviousPage}
-              >
-                {isFetchingPreviousPage
-                  ? 'Carregando...'
-                  : hasPreviousPage
-                    ? 'Cerregar anterior'
-                    : 'Nada mais para carregar'}
-              </button>
-            </div>
             <div className="grid grid-cols-6 w-full max-w-screen-lg flex-wrap items-center justify-evenly p-4 gap-4">
               {data?.pages.map((pag) => (
                 pag.pokemons.map((poke) => (

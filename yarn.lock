@@ -1934,6 +1934,11 @@ pirates@^4.0.1:
   resolved "https://registry.yarnpkg.com/pirates/-/pirates-4.0.5.tgz#feec352ea5c3268fb23a37c702ab1699f35a5f3b"
   integrity sha512-8V9+HQPupnaXMA23c5hvl69zXvTwTzyAYasnkb0Tts4XvO4CliqONMOnvlq26rkhLC3nWDFBJf73LU1e1VZLaQ==
 
+pokenode-ts@^1.18.3:
+  version "1.18.3"
+  resolved "https://registry.yarnpkg.com/pokenode-ts/-/pokenode-ts-1.18.3.tgz#732bc7600a9b9e1497ee1c87247cc16f81a06cbb"
+  integrity sha512-sRVrcdIpoIS1LRckma+tIUOBI595eDTYhCXm1n/dhZQHKZQ0f+dZwf+Mi2OrwvGHZD8orReMl7CiS6R7+ZUuVw==
+
 postcss-import@^14.1.0:
   version "14.1.0"
   resolved "https://registry.yarnpkg.com/postcss-import/-/postcss-import-14.1.0.tgz#a7333ffe32f0b8795303ee9e40215dac922781f0"
