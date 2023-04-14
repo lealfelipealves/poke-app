@@ -9,14 +9,14 @@ type GetPokemonResponse = {
   pokemons: Pokemon[];
 }
 
-const PAGINATION_LIMIT = 20;
+const PAGINATION_LIMIT = 24;
 
 export async function getPokemon({ pageParam = 1 }): Promise<GetPokemonResponse> {
   const countInitial = ((PAGINATION_LIMIT * pageParam) - PAGINATION_LIMIT) + 1;
   const countMaximum = (PAGINATION_LIMIT * pageParam) + 1;
   let endpoints = [];
 
-  for(let i = countInitial; i <= countMaximum; i++) {
+  for(let i = countInitial; i < countMaximum; i++) {
     endpoints.push(`pokemon/${i}`)
   }
 
