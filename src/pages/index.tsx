@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { CardItem } from '@/components/CardItem'
 import { Header } from '@/components/Header'
 import { usePokemonQuery } from '@/services/hooks/usePokemon'
 import { useInView } from 'react-intersection-observer'
 
 export default function Home() {
-  const [page, setPage] = useState(1)
   const { ref, inView } = useInView()
   const {
     isLoading,
@@ -15,7 +14,7 @@ export default function Home() {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = usePokemonQuery(page);
+  } = usePokemonQuery();
 
   useEffect(() => {
     if (inView) {

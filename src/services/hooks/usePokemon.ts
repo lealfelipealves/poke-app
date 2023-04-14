@@ -1,7 +1,7 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { api } from '../api';
-import axios, { AxiosResponse } from 'axios';
 import { Pokemon } from 'pokenode-ts'
+import { useInfiniteQuery } from '@tanstack/react-query';
+import axios, { AxiosResponse } from 'axios';
+import { api } from '../api';
 
 type GetPokemonResponse = {
   next?: number;
@@ -33,11 +33,11 @@ export async function getPokemon({ pageParam = 1 }): Promise<GetPokemonResponse>
   };
 }
 
-export function usePokemonQuery(page: number) {
+export function usePokemonQuery() {
   return useInfiniteQuery({
-    queryKey: ["pokemon", page],
+    queryKey: ["pokemon"],
     queryFn: getPokemon,
-    staleTime: 1000 * 60 * 10, // 10 minutes,
+    staleTime: 1000 * 60 * 60, // 60 minutes,
     keepPreviousData: true,
     getNextPageParam: (lastPage) => lastPage.next,
   });
