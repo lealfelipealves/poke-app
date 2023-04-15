@@ -1,23 +1,13 @@
-import { NamedAPIResource } from 'pokenode-ts'
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { api } from '@/services/api';
-
-export interface PokemonItem extends NamedAPIResource {
-  id: string
-}
-
-type GetPokemonItemResponse = {
-  count?: number;
-  next?: number;
-  previous?: number;
-  pokemons: PokemonItem[];
-}
+import { PokemonList } from '@/types';
 
 const PAGINATION_LIMIT = 18;
 
-export async function getPokemonWithPagination({ pageParam = 0 }): Promise<GetPokemonItemResponse> {
-  let next = undefined;
-  let previous = undefined;
+export async function getPokemonWithPagination({ pageParam = 0 }): Promise<PokemonList> {
+  let next = null;
+  let previous = null;
+  
   const { data } = await api.get('pokemon', {
     params: {
       limit: PAGINATION_LIMIT,
@@ -27,16 +17,17 @@ export async function getPokemonWithPagination({ pageParam = 0 }): Promise<GetPo
 
   if(data.next !== null) {
     const nextURL = new URLSearchParams(new URL(data.next).search);
-    next = Number(nextURL.get("offset"));
+    next = nextURL.get("offset");
   }
 
   if(data.previous !== null) {
     const previousURL = new URLSearchParams(new URL(data.previous).search);
-    previous = Number(previousURL.get("offset"));
+    previous = previousURL.get("offset");
   }
 
-  const pokemons = data.results.map((pokemon: any) => {
+  const resultsFormatted = data.results.map((pokemon: any) => {
     return {
+      id: pokemon.url.split("/")[6],
       name: pokemon.name,
       url: pokemon.url,
     }
@@ -46,7 +37,7 @@ export async function getPokemonWithPagination({ pageParam = 0 }): Promise<GetPo
     count: data.count,
     next,
     previous,
-    pokemons
+    results: resultsFormatted
   };
 }
 

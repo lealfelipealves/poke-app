@@ -1,15 +1,24 @@
-import Image from 'next/image'
-import { Fragment } from 'react'
+import Image from "next/image";
+import { Fragment, useEffect } from "react";
 
-import { Dialog, Transition } from '@headlessui/react'
-import { usePokemon } from '@/context/PokemonContext';
-import { useModal } from '@/context/ModalContext';
+import { Dialog, Transition } from "@headlessui/react";
+import { usePokemon } from "@/context/PokemonContext";
+import { useModal } from "@/context/ModalContext";
+import { usePokemonByIdQuery } from "@/hooks/usePokemonByIdQuery";
+import { Spinner } from "../Spinner";
 
-export function Modal() {  
-  const { pokemon } = usePokemon();
-  const { isOpen, setIsOpen }= useModal();
+export function Modal() {
+  const { pokemon, pokemonId, setPokemon } = usePokemon();
+  const { isOpen, setIsOpen } = useModal();
+  const { isLoading, data: pokemonData } = usePokemonByIdQuery(pokemonId);
 
-  return(
+  useEffect(() => {
+    if (pokemonData) {
+      setPokemon?.(pokemonData);
+    }
+  }, [pokemonData, setPokemon]);
+
+  return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setIsOpen}>
         <Transition.Child
@@ -35,46 +44,55 @@ export function Modal() {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full flex flex-col gap-4 max-w-fit transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-bold leading-6 text-gray-900 uppercase"
-                >
-                  {pokemon?.name}
-                </Dialog.Title>
-                <div className='flex items-center justify-center gap-10'>
-                  <div className="w-96 gap-4 flex flex-col justify-center items-center">
-                    <Image 
-                      className='w-full h-full max-h-40' 
-                      src={pokemon?.sprites.other?.dream_world.front_default || ""} 
-                      width={100} 
-                      height={100} 
-                      alt={pokemon?.name || 'pokemon'} 
-                      title={pokemon?.name} 
-                    />
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="font-bold">Altura:</div>
-                      <div>{pokemon?.height}m</div>
-                      <div className="font-bold">Peso:</div>
-                      <div>{pokemon?.weight}kg</div>
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <Dialog.Panel className="w-full flex flex-col gap-4 max-w-fit transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-bold leading-6 text-gray-900 uppercase"
+                  >
+                    {pokemon?.name}
+                  </Dialog.Title>
+                  <div className="flex items-center justify-center gap-10">
+                    <div className="w-96 gap-4 flex flex-col justify-center items-center">
+                      <Image
+                        className="w-full h-full max-h-40"
+                        src={
+                          pokemon?.sprites.other?.dream_world.front_default ||
+                          ""
+                        }
+                        width={100}
+                        height={100}
+                        alt={pokemon?.name || "pokemon"}
+                        title={pokemon?.name}
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="font-bold">Altura:</div>
+                        <div>{pokemon?.height}m</div>
+                        <div className="font-bold">Peso:</div>
+                        <div>{pokemon?.weight}kg</div>
+                      </div>
+                    </div>
+                    <div className="w-full">
+                      {pokemon?.stats.map((stat, index) => (
+                        <div key={index} className="grid grid-cols-3 gap-4">
+                          <div className="font-bold">{stat.stat.name}</div>
+                          <div>{stat.base_stat}</div>
+                          <div className="w-full h-2 bg-gray-200 rounded-full">
+                            <div
+                              className={`h-full bg-red-500 rounded-full`}
+                              style={{
+                                width: `${(stat.base_stat / 200) * 100}%`,
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <div className='w-full'>
-                    {pokemon?.stats.map((stat, index) => (
-                      <div key={index} className="grid grid-cols-3 gap-4">
-                        <div className="font-bold">{stat.stat.name}</div>
-                        <div>{stat.base_stat}</div>
-                        <div className="w-full h-2 bg-gray-200 rounded-full">
-                          <div
-                            className={`h-full bg-red-500 rounded-full`}
-                            style={{ width: `${(stat.base_stat / 200) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    ))} 
-                  </div>
-                </div>
-              </Dialog.Panel>
+                </Dialog.Panel>
+              )}
             </Transition.Child>
           </div>
         </div>
@@ -82,5 +100,3 @@ export function Modal() {
     </Transition>
   );
 }
-
-

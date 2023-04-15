@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useMemo, useContext } from 'react';
 import { Pokemon } from 'pokenode-ts'
+import { usePokemonByIdQuery } from '@/hooks/usePokemonByIdQuery';
 
 type PokemonContextProps = {
   children: React.ReactNode
@@ -7,7 +8,9 @@ type PokemonContextProps = {
 
 type PokemonContextProviderProps = {
   pokemon?: Pokemon
-  setPokemon: (pokemon: Pokemon) => void
+  setPokemon?: (pokemon: Pokemon) => void,
+  pokemonId: string,
+  setPokemonId?: (pokemonId: string) => void
 }
 
 export const PokemonContext = createContext<PokemonContextProviderProps>(
@@ -17,11 +20,16 @@ PokemonContext.displayName = 'Pokemon Context'
 
 export const PokemonProvider = ({ children }: PokemonContextProps) => {
   const [pokemon, setPokemon] = useState<Pokemon>();
+  const [pokemonId, setPokemonId] = useState<string>("1");
+
+  const pokemonValue = useMemo(() => ({
+    pokemon, setPokemon, pokemonId, setPokemonId
+  }), [
+    pokemon, setPokemon, pokemonId, setPokemonId
+  ]);
 
   return (
-    <PokemonContext.Provider
-      value={{ pokemon, setPokemon }}
-    >
+    <PokemonContext.Provider value={pokemonValue}>
       {children}
     </PokemonContext.Provider>
   );

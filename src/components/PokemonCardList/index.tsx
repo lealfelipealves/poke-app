@@ -1,14 +1,23 @@
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { PokemonCardItem } from '@/components/PokemonCardItem';
-import { usePokemonByIdQuery } from '@/hooks/usePokemonByIdQuery';
+import { usePokemonInfiniteQuery } from '@/hooks/usePokemonInfiniteQuery';
 import { usePokemonQuery } from '@/hooks/usePokemonQuery';
+import { Spinner } from '../Spinner';
 
 export function PokemonCardList() {
   const { ref, inView } = useInView();
 
-  const { data, isError, isLoading, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    usePokemonByIdQuery();
+  const { 
+    data, 
+    isError, 
+    isLoading, 
+    isFetching, 
+    isFetchingNextPage, 
+    fetchNextPage, 
+    hasNextPage
+  } =
+  usePokemonInfiniteQuery();
 
   const {
     isLoading: isLoadingPokemonByName,
@@ -25,15 +34,15 @@ export function PokemonCardList() {
   return (
     <div className="flex">
       {isLoading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : isError ? (
         <p>Error: erro</p>
       ) : (
         <div className="flex flex-col">
-          <div className="grid grid-cols-6 w-full max-w-screen-lg flex-wrap items-center justify-evenly p-4 gap-4">
+          <div className="flex flex-wrap w-full max-w-screen-lg items-center justify-evenly gap-4">
             {data?.pages.map((pag) =>
-              pag.pokemons.map((poke) => 
-                <PokemonCardItem key={poke.name} pokemon={poke} />
+              pag.results.map((pokemon) => 
+                <PokemonCardItem key={pokemon.name} pokemon={pokemon} />
               )
             )}
           </div>
