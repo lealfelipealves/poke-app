@@ -24,7 +24,9 @@ export function PokemonCardList() {
         <div className="flex flex-col">
           <div className="grid grid-cols-6 w-full max-w-screen-lg flex-wrap items-center justify-evenly p-4 gap-4">
             {data?.pages.map((pag) =>
-              pag.pokemons.map((poke) => <PokemonCardItem key={poke.name} pokemon={poke} />)
+              pag.pokemons.map((poke) => 
+                <PokemonCardItem key={poke.name} pokemon={poke} />
+              )
             )}
           </div>
           <div>
