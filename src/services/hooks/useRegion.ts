@@ -1,6 +1,7 @@
-import { NamedAPIResourceList, NamedAPIResource, Region } from 'pokenode-ts'
+import { NamedAPIResourceList, NamedAPIResource, Region, Pokedex, PokemonEntry } from 'pokenode-ts'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api';
+import axios, { AxiosResponse } from 'axios';
 
 export interface Regions extends NamedAPIResource {
   id: string
@@ -29,7 +30,32 @@ export async function getAllRegion(): Promise<GetPokemonResponse> {
 }
 
 export async function getRegionById(regionId: string): Promise<Region> {
+  let endpoints = [];
   const response = await api.get<Region>(`region/${regionId}`);
+
+  const pokedexIds = response.data.pokedexes.map((pokedex: any) => {
+    return {
+      pokedexId: pokedex.url.split('/')[pokedex.url.split('/').length - 2],
+    }
+  });
+  
+  for(let i = 0; i < pokedexIds.length; i++) {
+    endpoints.push(`pokedex/${pokedexIds[i].pokedexId}`)
+  }
+
+  const requests = endpoints.map(endpoint => api.get(endpoint));
+  const responses: AxiosResponse<Pokedex>[]  = await axios.all(requests);
+
+  const pokedex = axios.spread<AxiosResponse<Pokedex>, Pokedex[]>((...responses) => {
+    return responses.map(response => response.data);
+  })(responses);
+
+  const pokemonSpecies: NamedAPIResource[] = pokedex.reduce((acc: NamedAPIResource[], item: Pokedex) => {
+    return acc.concat(item.pokemon_entries.map(entry => entry.pokemon_species).filter(species => {
+      return !acc.find(obj => obj.name === species.name);
+    }));
+  }, []);
+  
   return response.data;
 }
 

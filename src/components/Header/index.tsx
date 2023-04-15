@@ -1,21 +1,20 @@
 import { getRegionById, useAllRegionQuery  } from '@/services/hooks/useRegion';
 import { queryClient } from '@/services/queryClient';
-import Image from 'next/image'
-import Link from 'next/link';
+import Image from 'next/image';
 
 export function Header() {
-
   const {
     isLoading,
     data,
     error,
-    isFetching
   } = useAllRegionQuery();
 
-
-
   async function handlePrefetchRegion(regionId: string) {
-    await queryClient.prefetchQuery(['region', regionId], () => getRegionById(regionId));
+    await queryClient.prefetchQuery(
+      ['region', regionId],
+      () => getRegionById(regionId),
+      { staleTime: 1000 * 60 * 10 }
+    );
   }
 
   return(
