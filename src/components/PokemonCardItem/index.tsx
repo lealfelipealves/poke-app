@@ -17,7 +17,6 @@ export function PokemonCardItem({ pokemon }: PokemonCardItemProps) {
     setPokemon(pokemon);
   }
 
-
   return(
     <div 
       className="flex flex-col w-full h-full max-h-96 rounded-2xl items-center justify-center bg-white py-12 px-4 font-bold text-2xl gap-6" 

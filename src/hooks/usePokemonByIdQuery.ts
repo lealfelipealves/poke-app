@@ -40,7 +40,7 @@ export async function getPokemonById({ pageParam = 1 }): Promise<GetPokemonRespo
 
 export function usePokemonByIdQuery() {
   return useInfiniteQuery({
-    queryKey: ["pokemon"],
+    queryKey: ["pokemonListById"],
     queryFn: getPokemonById,
     staleTime: 1000 * 60 * 60, // 60 minutes,
     keepPreviousData: true,

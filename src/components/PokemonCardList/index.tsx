@@ -1,12 +1,20 @@
 import { useEffect } from 'react';
-import { PokemonCardItem } from '@/components/PokemonCardItem';
-import { usePokemonByIdQuery } from '@/hooks/usePokemonById';
 import { useInView } from 'react-intersection-observer';
+import { PokemonCardItem } from '@/components/PokemonCardItem';
+import { usePokemonByIdQuery } from '@/hooks/usePokemonByIdQuery';
+import { usePokemonQuery } from '@/hooks/usePokemonQuery';
 
 export function PokemonCardList() {
   const { ref, inView } = useInView();
+
   const { data, isError, isLoading, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     usePokemonByIdQuery();
+
+  const {
+    isLoading: isLoadingPokemonByName,
+    isFetching: isFetchingPokemonByName,
+    data: dataPokemonByName,
+  } = usePokemonQuery();
 
   useEffect(() => {
     if (inView) {

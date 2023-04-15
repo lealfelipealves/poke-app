@@ -1,27 +1,28 @@
 import { useState } from 'react';
-import { getRegionById, useAllRegionQuery } from '@/hooks/useRegion';
-import { queryClient } from '@/services/queryClient';
 import Image from 'next/image';
+import { useAllRegionQuery } from '@/hooks/useRegion';
+import { usePokemonQuery } from '@/hooks/usePokemonQuery';
 import { Spinner } from '../Spinner';
-import { usePokemonByNameQuery } from '@/hooks/usePokemonByName';
 
 export function Header() {
   const { isLoading, data, error } = useAllRegionQuery();
+  const { data: dataUsePokemon} = usePokemonQuery();
 
   const [search, setSearch] = useState('');
 
-  const {
-    isLoading: isLoadingPokemonByName,
-    isFetching: isFetchingPokemonByName,
-    data: dataPokemonByName,
-  } = usePokemonByNameQuery(search);
+  function getSearchByName() {
+    const result = dataUsePokemon?.results
+      .filter((pokemon) => pokemon.name.includes(search))
+    console.log('result', result)
+  }
 
-  async function handlePrefetchRegion(regionId: string) {
+
+  /*async function handlePrefetchRegion(regionId: string) {
     queryClient.invalidateQueries(['pokemon']);
     await queryClient.prefetchQuery(['pokemon'], () => getRegionById(regionId), {
       staleTime: 1000 * 60 * 10,
     });
-  }
+  }*/
 
   return (
     <div className="flex flex-col w-full items-center gap-4">
@@ -38,6 +39,13 @@ export function Header() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          
+          <button type="button">
+            <div className="flex flex-col items-center justify-center border border-red-500 p-2 rounded-md" onClick={getSearchByName}>
+              Search
+            </div>
+          </button>
+
           <button type="button">
             <div className="flex flex-col items-center justify-center border border-red-500 p-2 rounded-md">
               Limpar
@@ -48,7 +56,7 @@ export function Header() {
 
       <div className="flex max-w-screen-lg rounded-2xl items-center justify-center w-full bg-white p-4">
         {isLoading ? (
-          <p>Loading...</p>
+          <Spinner />
         ) : error ? (
           <p>Error: erro</p>
         ) : (
@@ -57,7 +65,7 @@ export function Header() {
               <button
                 key={region.name}
                 type="button"
-                onMouseEnter={() => handlePrefetchRegion(region.id)}
+                onMouseEnter={() => {}}
               >
                 <div className="flex flex-col items-center justify-center border border-red-500 p-2 rounded-md">
                   {region.name}

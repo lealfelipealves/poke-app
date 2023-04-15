@@ -1,4 +1,4 @@
-import { NamedAPIResource, Pokemon } from 'pokenode-ts'
+import { NamedAPIResource } from 'pokenode-ts'
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { api } from '@/services/api';
 
@@ -50,9 +50,9 @@ export async function getPokemonWithPagination({ pageParam = 0 }): Promise<GetPo
   };
 }
 
-export function usePokemonQuery() {
+export function usePokemonInfiniteQuery() {
   return useInfiniteQuery({
-    queryKey: ["pokemon"],
+    queryKey: ["pokemonList"],
     queryFn: getPokemonWithPagination,
     staleTime: 1000 * 60 * 10, // 10 minutes,
     keepPreviousData: true,

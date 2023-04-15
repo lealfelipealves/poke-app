@@ -9,7 +9,7 @@ export async function getPokemonDetails(name: string): Promise<Pokemon> {
 
 export function usePokemonByNameQuery(name: string) {
   return useQuery({
-    queryKey: ["pokemon", name],
+    queryKey: ["pokemonName", name],
     queryFn: () => getPokemonDetails(name),
     staleTime: 1000 * 60 * 10, // 10 minutes,
     keepPreviousData: true,
