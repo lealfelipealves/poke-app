@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import { Pokemon } from "pokenode-ts";
 
-type CardItemProps = {
+type PokemonCardItemProps = {
   pokemon: Pokemon;
 }
 
-export function CardItem({ pokemon }: CardItemProps) {
+export function PokemonCardItem({ pokemon }: PokemonCardItemProps) {
   return(
     <div className="flex flex-col w-full h-full max-h-96 rounded-2xl items-center justify-center bg-white py-12 px-4 font-bold text-2xl gap-6">
       {pokemon.sprites?.other && (
