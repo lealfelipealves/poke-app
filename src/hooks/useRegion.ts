@@ -1,7 +1,7 @@
-import { NamedAPIResourceList, NamedAPIResource, Region, Pokedex, PokemonEntry } from 'pokenode-ts'
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../api';
 import axios, { AxiosResponse } from 'axios';
+import { NamedAPIResourceList, NamedAPIResource, Region, Pokedex } from 'pokenode-ts'
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/services/api';
 
 export interface Regions extends NamedAPIResource {
   id: string
@@ -29,7 +29,7 @@ export async function getAllRegion(): Promise<GetPokemonResponse> {
   };
 }
 
-export async function getRegionById(regionId: string): Promise<Region> {
+export async function getRegionById(regionId: string): Promise<NamedAPIResource[]> {
   let endpoints = [];
   const response = await api.get<Region>(`region/${regionId}`);
 
@@ -56,7 +56,7 @@ export async function getRegionById(regionId: string): Promise<Region> {
     }));
   }, []);
   
-  return response.data;
+  return pokemonSpecies;
 }
 
 export function useAllRegionQuery() {
