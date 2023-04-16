@@ -1,35 +1,46 @@
-import React, { createContext, useState, useMemo, useContext, useEffect } from 'react';
-import { Pokemon, Regions } from 'pokenode-ts'
-import { usePokemonInfiniteQuery } from '@/hooks/usePokemonInfiniteQuery';
-import { NamedAPIResourceWithId } from '@/types';
+import React, {
+  createContext,
+  useState,
+  useMemo,
+  useContext,
+  useEffect,
+} from "react";
+import { Pokemon, Regions } from "pokenode-ts";
+import { usePokemonInfiniteQuery } from "@/hooks/usePokemonInfiniteQuery";
+import { NamedAPIResourceWithId } from "@/types";
 
 type PokemonContextProps = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 type PokemonContextProviderProps = {
-  searchTerm?: string
-  setSearchTerm?: (searchTerm: string) => void,
-  filteredData?: NamedAPIResourceWithId[],
-  setFilteredData?: (pokemonList: NamedAPIResourceWithId[]) => void,
-  pokemon?: Pokemon
-  setPokemon?: (pokemon: Pokemon) => void,
-  regionSelected?: Regions
-  setRegionSelected?: (region?: Regions) => void
-}
+  searchTerm?: string;
+  setSearchTerm?: (searchTerm: string) => void;
+  filteredData?: NamedAPIResourceWithId[];
+  setFilteredData?: (pokemonList: NamedAPIResourceWithId[]) => void;
+  pokemon?: Pokemon;
+  setPokemon?: (pokemon: Pokemon) => void;
+  regionSelected?: Regions;
+  setRegionSelected?: (region?: Regions) => void;
+};
 
 export const PokemonContext = createContext<PokemonContextProviderProps>(
   {} as PokemonContextProviderProps
-)
-PokemonContext.displayName = 'Pokemon Context'
+);
+PokemonContext.displayName = "Pokemon Context";
 
 export const PokemonProvider = ({ children }: PokemonContextProps) => {
   const { data } = usePokemonInfiniteQuery();
   
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState<NamedAPIResourceWithId[]>([]);
+  const [filteredData, setFilteredData] = useState<NamedAPIResourceWithId[]>(
+    []
+  );
   const [pokemon, setPokemon] = useState<Pokemon>();  
   const [regionSelected, setRegionSelected] = useState<Regions | undefined>();
+  const [currentPokemonList, setCurrentPokemonList] = useState<
+    NamedAPIResourceWithId[]
+  >([]);
 
   const filterData = () => {
     const filtered = data?.pages.flatMap((page) =>
@@ -44,17 +55,34 @@ export const PokemonProvider = ({ children }: PokemonContextProps) => {
     filterData();
   }, [data, searchTerm]);
 
-  const pokemonValue = useMemo(() => ({
-    searchTerm, setSearchTerm,
-    pokemon, setPokemon,
-    filteredData, setFilteredData,
-    regionSelected, setRegionSelected
-  }), [
-    searchTerm, setSearchTerm,
-    pokemon, setPokemon,
-    filteredData, setFilteredData,
-    regionSelected, setRegionSelected
-  ]);
+  useEffect(() => {
+    if(searchTerm){
+      setSearchTerm('')
+    }
+  }, [regionSelected]);
+
+  const pokemonValue = useMemo(
+    () => ({
+      searchTerm,
+      setSearchTerm,
+      pokemon,
+      setPokemon,
+      filteredData,
+      setFilteredData,
+      regionSelected,
+      setRegionSelected,
+    }),
+    [
+      searchTerm,
+      setSearchTerm,
+      pokemon,
+      setPokemon,
+      filteredData,
+      setFilteredData,
+      regionSelected,
+      setRegionSelected,
+    ]
+  );
 
   return (
     <PokemonContext.Provider value={pokemonValue}>
@@ -67,8 +95,8 @@ export const usePokemon = () => {
   const context = useContext(PokemonContext);
   if (!context) {
     throw new Error(
-      'Para usar o usePokemon, é obrigatório o usuário do Provider'
-    )
+      "Para usar o usePokemon, é obrigatório o usuário do Provider"
+    );
   }
-  return context
-}
+  return context;
+};
