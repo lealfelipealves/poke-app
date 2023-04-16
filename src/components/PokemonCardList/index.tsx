@@ -1,24 +1,25 @@
-import { useEffect } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { PokemonCardItem } from '@/components/PokemonCardItem';
-import { usePokemonInfiniteQuery } from '@/hooks/usePokemonInfiniteQuery';
-import { usePokemon } from '@/context/PokemonContext';
-import { Spinner } from '../Spinner';
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { PokemonCardItem } from "@/components/PokemonCardItem";
+import { usePokemonInfiniteQuery } from "@/hooks/usePokemonInfiniteQuery";
+import { usePokemon } from "@/context/PokemonContext";
+import { Spinner } from "../Spinner";
+import { Error } from "../Error";
 
 export function PokemonCardList() {
   const { ref, inView } = useInView();
-  const { filteredData, searchTerm, regionSelected } = usePokemon();
+  const { filteredData, searchTerm, regionSelected, currentPokemonList } =
+    usePokemon();
 
-  const { 
-    data, 
-    isError, 
-    isLoading, 
-    isFetching, 
-    isFetchingNextPage, 
-    fetchNextPage, 
-    hasNextPage
-  } =
-  usePokemonInfiniteQuery();
+  const {
+    data,
+    isError,
+    isLoading,
+    isFetching,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = usePokemonInfiniteQuery();
 
   useEffect(() => {
     if (inView) {
@@ -26,44 +27,50 @@ export function PokemonCardList() {
     }
   }, [inView]);
 
+  if (isLoading) {
+    <div className="flex w-full max-w-screen-lg">
+      <Spinner />
+    </div>;
+  }
+
+  if (isError) {
+    <div className="flex w-full max-w-screen-lg">
+      <Error />
+    </div>;
+  }
+
   return (
     <div className="flex w-full max-w-screen-lg">
-      {isLoading ? (
-        <Spinner />
-      ) : isError ? (
-        <p>Error: erro</p>
-      ) : (
+      {
         <div className="flex flex-col flex-wrap w-full">
           <div className="flex flex-wrap w-full gap-4">
-            {(searchTerm || regionSelected) && filteredData ? (
-              filteredData?.map((pokemon) => (
+            <div className="flex w-full flex-wrap gap-4">
+              {currentPokemonList.map((pokemon) => (
                 <PokemonCardItem key={pokemon.name} pokemon={pokemon} />
-              ))
-            ) : (
-              <div className='flex w-full flex-wrap gap-4'>
-                {data?.pages.map((pag) =>
-                  pag.results.map((pokemon) => 
-                    <PokemonCardItem key={pokemon.name} pokemon={pokemon} />
-                  )
+              ))}
+              <button
+                className="flex w-full justify-center items-center"
+                ref={ref}
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+              >
+                {isFetchingNextPage ? (
+                  <Spinner />
+                ) : hasNextPage ? (
+                  "Cerregar os próximos"
+                ) : (
+                  "Nada mais para carregar"
                 )}
-                <button
-                  className='flex w-full justify-center items-center'
-                  ref={ref}
-                  onClick={() => fetchNextPage()}
-                  disabled={!hasNextPage || isFetchingNextPage}
-                >
-                  {isFetchingNextPage
-                    ? <Spinner />
-                    : hasNextPage
-                      ? 'Cerregar os proximos'
-                      : 'Nada mais para carregar'}
-                </button>
-              </div>
-            )}
+              </button>
+            </div>
           </div>
-          <div>{isFetching && !isFetchingNextPage ? 'Atualização em segundo plano...' : null}</div>
+          <div>
+            {isFetching && !isFetchingNextPage
+              ? "Atualização em segundo plano..."
+              : null}
+          </div>
         </div>
-      )}
+      }
     </div>
   );
 }

@@ -1,9 +1,9 @@
-import { Header } from '@/components/Header'
-import { Modal } from '@/components/Modal'
-import { PokemonCardList } from '@/components/PokemonCardList'
-import { PokemonProvider } from '@/context/PokemonContext'
-import { ModalProvider } from '@/context/ModalContext'
-import { RegionFilter } from '@/components/RegionFilter'
+import { Header } from "@/components/Header";
+import { Modal } from "@/components/Modal";
+import { PokemonCardList } from "@/components/PokemonCardList";
+import { PokemonProvider } from "@/context/PokemonContext";
+import { ModalProvider } from "@/context/ModalContext";
+import { RegionFilter } from "@/components/RegionFilter";
 
 export default function Home() {
   return (
@@ -17,5 +17,5 @@ export default function Home() {
         </ModalProvider>
       </PokemonProvider>
     </main>
-  )
+  );
 }

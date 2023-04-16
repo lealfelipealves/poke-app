@@ -1,26 +1,28 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { api } from '@/services/api';
-import { NamedAPIResourceListWithId } from '@/types';
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { api } from "@/services/api";
+import { NamedAPIResourceListWithId } from "@/types";
 
 const PAGINATION_LIMIT = 18;
 
-export async function getPokemonWithPagination({ pageParam = 0 }): Promise<NamedAPIResourceListWithId> {
+export async function getPokemonWithPagination({
+  pageParam = 0,
+}): Promise<NamedAPIResourceListWithId> {
   let next = null;
   let previous = null;
-  
-  const { data } = await api.get('pokemon', {
+
+  const { data } = await api.get("pokemon", {
     params: {
       limit: PAGINATION_LIMIT,
       offset: pageParam,
     },
   });
 
-  if(data.next !== null) {
+  if (data.next !== null) {
     const nextURL = new URLSearchParams(new URL(data.next).search);
     next = nextURL.get("offset");
   }
 
-  if(data.previous !== null) {
+  if (data.previous !== null) {
     const previousURL = new URLSearchParams(new URL(data.previous).search);
     previous = previousURL.get("offset");
   }
@@ -30,14 +32,14 @@ export async function getPokemonWithPagination({ pageParam = 0 }): Promise<Named
       id: Number(pokemon.url.split("/")[6]),
       name: pokemon.name,
       url: pokemon.url,
-    }
+    };
   });
 
   return {
     count: data.count,
     next,
     previous,
-    results: resultsFormatted
+    results: resultsFormatted,
   };
 }
 

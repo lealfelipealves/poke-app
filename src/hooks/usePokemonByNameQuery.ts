@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { Pokemon } from 'pokenode-ts'
-import { api } from '@/services/api';
+import { useQuery } from "@tanstack/react-query";
+import { Pokemon } from "pokenode-ts";
+import { api } from "@/services/api";
 
 export async function getPokemonDetails(pokemonName: string): Promise<Pokemon> {
   const { data } = await api.get(`pokemon/${pokemonName}`);

@@ -8,7 +8,7 @@ import { NamedAPIResourceWithId } from '@/types';
 
 export function RegionFilter() {
   const { isLoading, data, error } = useRegionsQuery();
-  const { setFilteredData, setRegionSelected, regionSelected } = usePokemon();
+  const { setFilteredDataByRegion, setRegionSelected, regionSelected } = usePokemon();
 
   const { 
     isFetching: isFetchingRegionByName, 
@@ -17,9 +17,9 @@ export function RegionFilter() {
 
   useEffect(() => {
     if (dataRegionByName) {
-      setFilteredData?.(dataRegionByName);
+      setFilteredDataByRegion?.(dataRegionByName);
     }
-  }, [dataRegionByName, setFilteredData]);
+  }, [dataRegionByName, setFilteredDataByRegion]);
     
   async function handlePrefetchRegion(regionName: string) {
     await queryClient.prefetchQuery(['region', regionName], () => getRegionByName(regionName), {
@@ -30,12 +30,12 @@ export function RegionFilter() {
   async function handleFilterRegion(region: NamedAPIResourceWithId) {
     if(regionSelected && regionSelected === region.id) {
       setRegionSelected?.(undefined);
-      setFilteredData?.([]);
+      setFilteredDataByRegion?.([]);
     } else {
       const queryKey = ['region', region.name];
       const data = queryClient.getQueryData<NamedAPIResourceWithId[]>(queryKey);
       setRegionSelected?.(region.id);
-      setFilteredData?.(data!);
+      setFilteredDataByRegion?.(data!);
     }  
   }
   

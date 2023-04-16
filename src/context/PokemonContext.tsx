@@ -22,6 +22,9 @@ type PokemonContextProviderProps = {
   setPokemon?: (pokemon: Pokemon) => void;
   regionSelected?: Regions;
   setRegionSelected?: (region?: Regions) => void;
+  currentPokemonList: NamedAPIResourceWithId[];
+  filteredDataByRegion?: NamedAPIResourceWithId[];
+  setFilteredDataByRegion?: (pokemonList: NamedAPIResourceWithId[]) => void;
 };
 
 export const PokemonContext = createContext<PokemonContextProviderProps>(
@@ -31,35 +34,48 @@ PokemonContext.displayName = "Pokemon Context";
 
 export const PokemonProvider = ({ children }: PokemonContextProps) => {
   const { data } = usePokemonInfiniteQuery();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState<NamedAPIResourceWithId[]>(
     []
   );
-  const [pokemon, setPokemon] = useState<Pokemon>();  
+  const [pokemon, setPokemon] = useState<Pokemon>();
   const [regionSelected, setRegionSelected] = useState<Regions | undefined>();
   const [currentPokemonList, setCurrentPokemonList] = useState<
     NamedAPIResourceWithId[]
   >([]);
+  const [filteredDataByRegion, setFilteredDataByRegion] = useState<
+    NamedAPIResourceWithId[]
+  >([]);
 
   const filterData = () => {
-    const filtered = data?.pages.flatMap((page) =>
-      page.results.filter((pokemon) => 
-        pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    ).map((pokemon) => pokemon)
-    setFilteredData(filtered ?? []);
+    const filtered = currentPokemonList.filter((pokemon) =>
+      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    return filtered ?? []
   };
-  
-  useEffect(() => {
-    filterData();
-  }, [data, searchTerm]);
 
   useEffect(() => {
-    if(searchTerm){
-      setSearchTerm('')
+    if (searchTerm) {
+      setSearchTerm("");
     }
   }, [regionSelected]);
+
+  useEffect(() => {
+    if (regionSelected) {
+      setCurrentPokemonList(filteredDataByRegion);
+    } else {
+      setCurrentPokemonList(
+        data?.pages.flatMap((page) => page.results.map((pokemon) => pokemon)) ||
+          []
+      );
+    }
+
+    if (searchTerm) {
+      setCurrentPokemonList(filterData());
+    } 
+  }, [data, regionSelected, filteredDataByRegion, searchTerm]);
+
 
   const pokemonValue = useMemo(
     () => ({
@@ -71,6 +87,9 @@ export const PokemonProvider = ({ children }: PokemonContextProps) => {
       setFilteredData,
       regionSelected,
       setRegionSelected,
+      currentPokemonList,
+      filteredDataByRegion,
+      setFilteredDataByRegion,
     }),
     [
       searchTerm,
@@ -81,6 +100,9 @@ export const PokemonProvider = ({ children }: PokemonContextProps) => {
       setFilteredData,
       regionSelected,
       setRegionSelected,
+      currentPokemonList,
+      filteredDataByRegion,
+      setFilteredDataByRegion,
     ]
   );
 
