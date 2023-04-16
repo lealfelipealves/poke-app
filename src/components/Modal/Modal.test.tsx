@@ -1,20 +1,13 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
-import { usePokemonByNameQuery } from "@/hooks/usePokemonByNameQuery";
+import { render } from '@testing-library/react';
+import { QueryClientProvider } from '@tanstack/react-query'
 
 import { ModalContext } from '@/context/ModalContext'
 import { PokemonContext } from '@/context/PokemonContext';
 import { bulbasaur } from '@/mocks/bulbasaur'
+import { queryClient } from '@/services/queryClient'
 import { Modal } from './index';
 
-
-const mockUseQuery = useQuery as jest.Mock;
-
-jest.mock('@tanstack/react-query', () => ({
-  useQuery: mockUseQuery,
-  useInfiniteQuery: jest.fn(),
-}));
 
 describe('Modal', () => {
   it('renders modal component', () => {
@@ -22,23 +15,11 @@ describe('Modal', () => {
     const pokemon = bulbasaur;
     const setIsOpen = jest.fn();
 
-    const client = new QueryClient();
-    mockUseQuery.mockReturnValue({
-      isLoading: false,
-      data: bulbasaur,
-    });
-
-    /*(usePokemonByNameQuery as jest.Mock).mockReturnValue({
-      isLoading: false,
-      data: bulbasaur,
-    });*/
-
-    const queryClient = new QueryClient();
     queryClient.setQueryData(['pokemon', 'bulbasaur'], bulbasaur);
-  
+
     const Wrapper = ({ children }: any) => {
       return (
-        <QueryClientProvider client={client}>
+        <QueryClientProvider client={queryClient}>
           <PokemonContext.Provider value={{ pokemon }}>
             <ModalContext.Provider value={{ isOpen, setIsOpen }}>
               {children}
@@ -48,8 +29,12 @@ describe('Modal', () => {
       );
     };
 
-    const { debug } = render(<Modal />, { wrapper: Wrapper });
-    
-    debug();
+    const { getByRole } = render(<Modal />, { wrapper: Wrapper });
+
+    const imgElement = getByRole('img', { name: /bulbasaur/i });
+    const titleElement = getByRole('heading', { name: /bulbasaur/i });
+
+    expect(imgElement).toBeInTheDocument();
+    expect(titleElement).toBeInTheDocument();
   });
 });
