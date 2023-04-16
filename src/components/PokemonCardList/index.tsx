@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { PokemonCardItem } from '@/components/PokemonCardItem';
 import { usePokemonInfiniteQuery } from '@/hooks/usePokemonInfiniteQuery';
-import { usePokemonQuery } from '@/hooks/usePokemonQuery';
+import { usePokemon } from '@/context/PokemonContext';
 import { Spinner } from '../Spinner';
 
 export function PokemonCardList() {
   const { ref, inView } = useInView();
+  const { searchTerm, filteredData } = usePokemon();
 
   const { 
     data, 
@@ -19,12 +20,6 @@ export function PokemonCardList() {
   } =
   usePokemonInfiniteQuery();
 
-  const {
-    isLoading: isLoadingPokemonByName,
-    isFetching: isFetchingPokemonByName,
-    data: dataPokemonByName,
-  } = usePokemonQuery();
-
   useEffect(() => {
     if (inView) {
       fetchNextPage();
@@ -32,32 +27,39 @@ export function PokemonCardList() {
   }, [inView]);
 
   return (
-    <div className="flex">
+    <div className="flex w-full max-w-screen-lg">
       {isLoading ? (
         <Spinner />
       ) : isError ? (
         <p>Error: erro</p>
       ) : (
-        <div className="flex flex-col">
-          <div className="flex flex-wrap w-full max-w-screen-lg items-center justify-evenly gap-4">
-            {data?.pages.map((pag) =>
-              pag.results.map((pokemon) => 
+        <div className="flex flex-col flex-wrap w-full">
+          <div className="flex flex-wrap w-full gap-4">
+            {searchTerm ? (
+              filteredData?.map((pokemon) => (
                 <PokemonCardItem key={pokemon.name} pokemon={pokemon} />
-              )
+              ))
+            ) : (
+              <div className='flex w-full flex-wrap gap-4'>
+                {data?.pages.map((pag) =>
+                  pag.results.map((pokemon) => 
+                    <PokemonCardItem key={pokemon.name} pokemon={pokemon} />
+                  )
+                )}
+                <button
+                  className='flex w-full justify-center items-center'
+                  ref={ref}
+                  onClick={() => fetchNextPage()}
+                  disabled={!hasNextPage || isFetchingNextPage}
+                >
+                  {isFetchingNextPage
+                    ? <Spinner />
+                    : hasNextPage
+                      ? 'Cerregar os proximos'
+                      : 'Nada mais para carregar'}
+                </button>
+              </div>
             )}
-          </div>
-          <div>
-            <button
-              ref={ref}
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-            >
-              {isFetchingNextPage
-                ? 'Carregando...'
-                : hasNextPage
-                  ? 'Cerregar os proximos'
-                  : 'Nada mais para carregar'}
-            </button>
           </div>
           <div>{isFetching && !isFetchingNextPage ? 'Atualização em segundo plano...' : null}</div>
         </div>

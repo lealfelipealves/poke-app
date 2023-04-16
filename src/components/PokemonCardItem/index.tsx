@@ -24,7 +24,7 @@ export function PokemonCardItem({ pokemon }: PokemonCardItemProps) {
       className="flex flex-col w-full rounded-2xl items-start justify-center bg-white font-bold text-lg p-4 cursor-pointer" 
       onClick={handleOpenModal}
     >
-      <span>#{pokemon.id} - {pokemon.name}</span>
+      <p>#{pokemon.id} - {pokemon.name}</p>
     </div>
   );
 }

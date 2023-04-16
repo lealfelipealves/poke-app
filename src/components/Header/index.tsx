@@ -1,21 +1,11 @@
-import { useState } from 'react';
 import Image from 'next/image';
 import { useAllRegionQuery } from '@/hooks/useRegion';
-import { usePokemonQuery } from '@/hooks/usePokemonQuery';
+import { usePokemon } from '@/context/PokemonContext';
 import { Spinner } from '../Spinner';
 
 export function Header() {
   const { isLoading, data, error } = useAllRegionQuery();
-  const { data: dataUsePokemon} = usePokemonQuery();
-
-  const [search, setSearch] = useState('');
-
-  function getSearchByName() {
-    const result = dataUsePokemon?.results
-      .filter((pokemon) => pokemon.name.includes(search))
-    console.log('result', result)
-  }
-
+  const { searchTerm, setSearchTerm } = usePokemon();
 
   /*async function handlePrefetchRegion(regionId: string) {
     queryClient.invalidateQueries(['pokemon']);
@@ -23,6 +13,10 @@ export function Header() {
       staleTime: 1000 * 60 * 10,
     });
   }*/
+
+  const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
   return (
     <div className="flex flex-col w-full items-center gap-4">
@@ -36,21 +30,9 @@ export function Header() {
             type="search"
             placeholder="Search"
             className="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchTerm}
+            onChange={handleSearchTermChange}
           />
-          
-          <button type="button">
-            <div className="flex flex-col items-center justify-center border border-red-500 p-2 rounded-md" onClick={getSearchByName}>
-              Search
-            </div>
-          </button>
-
-          <button type="button">
-            <div className="flex flex-col items-center justify-center border border-red-500 p-2 rounded-md">
-              Limpar
-            </div>
-          </button>
         </div>
       </div>
 

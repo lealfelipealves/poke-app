@@ -7,8 +7,8 @@ import { ModalProvider } from '@/context/ModalContext'
 export default function Home() {
   return (
     <main className="flex w-full min-h-screen flex-col items-center justify-start gap-4 bg-gradient-to-b from-[#ef5350] to-[#e53935] p-4">
-      <Header />
       <PokemonProvider>
+        <Header />
         <ModalProvider>
           <PokemonCardList />
           <Modal />

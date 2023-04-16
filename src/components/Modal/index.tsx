@@ -11,10 +11,8 @@ export function Modal() {
   const { pokemon, setPokemon } = usePokemon();
   const { isOpen, setIsOpen } = useModal();
 
-  const { 
-    isLoading: isLoadingPokemonByName,
-    data: dataPokemonByName
-  } = usePokemonByNameQuery(pokemon?.name || "bulbasaur");
+  const { isFetching: isFetchingPokemonByName, data: dataPokemonByName } =
+    usePokemonByNameQuery(pokemon?.name || "bulbasaur");
 
   useEffect(() => {
     if (dataPokemonByName) {
@@ -48,55 +46,62 @@ export function Modal() {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              {isLoadingPokemonByName ? (
-                <Spinner />
-              ) : (
-                <Dialog.Panel className="w-full flex flex-col gap-4 max-w-fit transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-bold leading-6 text-gray-900 uppercase"
-                  >
-                    {pokemon?.name}
-                  </Dialog.Title>
-                  <div className="flex items-center justify-center gap-10">
-                    <div className="w-96 gap-4 flex flex-col justify-center items-center">
-                      <Image
-                        className="w-full h-full max-h-40"
-                        src={
-                          pokemon?.sprites.other?.dream_world.front_default ||
-                          ""
-                        }
-                        width={100}
-                        height={100}
-                        alt={pokemon?.name || "pokemon"}
-                        title={pokemon?.name}
-                      />
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="font-bold">Altura:</div>
-                        <div>{pokemon?.height}m</div>
-                        <div className="font-bold">Peso:</div>
-                        <div>{pokemon?.weight}kg</div>
+              <Dialog.Panel className="w-full flex flex-col gap-4 max-w-fit transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                {isFetchingPokemonByName ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <Dialog.Title
+                      as="h2"
+                      className="text-xl font-bold leading-8 text-gray-900 uppercase"
+                    >
+                      {pokemon?.name}
+                    </Dialog.Title>
+
+                    <div className="flex items-center justify-center gap-4">
+                      <div className="w-96 gap-4 flex flex-col justify-center items-center">
+                        <Image
+                          className="w-full h-full max-h-40"
+                          src={
+                            pokemon?.sprites.other?.dream_world.front_default ||
+                            ""
+                          }
+                          width={100}
+                          height={100}
+                          alt={pokemon?.name || "pokemon"}
+                          title={pokemon?.name}
+                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="font-bold">Altura:</div>
+                          <div>{pokemon?.height}m</div>
+                          <div className="font-bold">Peso:</div>
+                          <div>{pokemon?.weight}kg</div>
+                        </div>
+                      </div>
+                      <div className="w-full">
+                        {pokemon?.stats.map((stat, index) => (
+                          <div key={index} className="grid grid-cols-3 gap-4">
+                            <div className="flex items-center justify-end font-bold">
+                              {stat.stat.name}
+                            </div>
+                            <div className="flex items-center justify-center text-center">
+                              {stat.base_stat}
+                            </div>
+                            <div className="flex h-2 bg-gray-200 rounded-full">
+                              <div
+                                className={`h-full bg-red-500 rounded-full`}
+                                style={{
+                                  width: `${(stat.base_stat / 200) * 100}%`,
+                                }}
+                              ></div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <div className="w-full">
-                      {pokemon?.stats.map((stat, index) => (
-                        <div key={index} className="grid grid-cols-3 gap-4">
-                          <div className="font-bold">{stat.stat.name}</div>
-                          <div>{stat.base_stat}</div>
-                          <div className="w-full h-2 bg-gray-200 rounded-full">
-                            <div
-                              className={`h-full bg-red-500 rounded-full`}
-                              style={{
-                                width: `${(stat.base_stat / 200) * 100}%`,
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </Dialog.Panel>
-              )}
+                  </>
+                )}
+              </Dialog.Panel>
             </Transition.Child>
           </div>
         </div>
