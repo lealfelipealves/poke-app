@@ -25,15 +25,25 @@ export function PokemonCardList() {
   }, [inView]);
 
   if (isLoading) {
-    <div className="flex w-full max-w-screen-lg">
-      <Spinner />
-    </div>;
+    return (
+      <div
+        data-testid="pokemon-card-list-loading"
+        className="flex w-full max-w-screen-lg"
+      >
+        <Spinner />
+      </div>
+    );
   }
 
   if (isError) {
-    <div className="flex w-full max-w-screen-lg">
-      <Error />
-    </div>;
+    return (
+      <div 
+        data-testid="pokemon-card-list-error"
+        className="flex w-full max-w-screen-lg"
+      >
+        <Error />
+      </div>
+    );
   }
 
   return (
@@ -54,7 +64,7 @@ export function PokemonCardList() {
                 {isFetchingNextPage ? (
                   <Spinner />
                 ) : hasNextPage ? (
-                  "Cerregar os próximos"
+                  "Carregar os próximos"
                 ) : (
                   "Nada mais para carregar"
                 )}
