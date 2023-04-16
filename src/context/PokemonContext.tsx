@@ -9,13 +9,13 @@ type PokemonContextProps = {
 
 type PokemonContextProviderProps = {
   searchTerm?: string
-  setSearchTerm: (searchTerm: string) => void,
+  setSearchTerm?: (searchTerm: string) => void,
   filteredData?: NamedAPIResourceWithId[],
-  setFilteredData: (pokemonList: NamedAPIResourceWithId[]) => void,
+  setFilteredData?: (pokemonList: NamedAPIResourceWithId[]) => void,
   pokemon?: Pokemon
-  setPokemon: (pokemon: Pokemon) => void,
+  setPokemon?: (pokemon: Pokemon) => void,
   regionSelected?: Regions
-  setRegionSelected: (region?: Regions) => void
+  setRegionSelected?: (region?: Regions) => void
 }
 
 export const PokemonContext = createContext<PokemonContextProviderProps>(

@@ -17,7 +17,7 @@ export function RegionFilter() {
 
   useEffect(() => {
     if (dataRegionByName) {
-      setFilteredData(dataRegionByName);
+      setFilteredData?.(dataRegionByName);
     }
   }, [dataRegionByName, setFilteredData]);
     
@@ -29,13 +29,13 @@ export function RegionFilter() {
 
   async function handleFilterRegion(region: NamedAPIResourceWithId) {
     if(regionSelected && regionSelected === region.id) {
-      setRegionSelected(undefined);
-      setFilteredData([]);
+      setRegionSelected?.(undefined);
+      setFilteredData?.([]);
     } else {
       const queryKey = ['region', region.name];
       const data = queryClient.getQueryData<NamedAPIResourceWithId[]>(queryKey);
-      setRegionSelected(region.id);
-      setFilteredData(data!);
+      setRegionSelected?.(region.id);
+      setFilteredData?.(data!);
     }  
   }
   

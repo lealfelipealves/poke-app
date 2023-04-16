@@ -5,14 +5,14 @@ export function Header() {
   const { searchTerm, setSearchTerm } = usePokemon();
 
   const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    setSearchTerm?.(event.target.value);
   };
 
   return (
     <div className="flex flex-col w-full items-center gap-4">
       <div className="flex max-w-screen-lg rounded-2xl items-center justify-between w-full bg-white p-4">
         <div className="flex">
-          <Image src="/images/pokeapi_256.png" alt="pokemon" width={100} height={24} priority />
+          <Image src="/images/pokeapi_256.png" alt="pokemon_logo" width={100} height={24} priority />
         </div>
 
         <div className="flex flex-wrap justify-center">
