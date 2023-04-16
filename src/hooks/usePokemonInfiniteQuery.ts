@@ -1,10 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { api } from '@/services/api';
-import { PokemonList } from '@/types';
+import { NamedAPIResourceListWithId } from '@/types';
 
 const PAGINATION_LIMIT = 18;
 
-export async function getPokemonWithPagination({ pageParam = 0 }): Promise<PokemonList> {
+export async function getPokemonWithPagination({ pageParam = 0 }): Promise<NamedAPIResourceListWithId> {
   let next = null;
   let previous = null;
   

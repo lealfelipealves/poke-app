@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { NamedAPIResource, Pokemon } from 'pokenode-ts'
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { api } from '@/services/api';
-import { PokemonItem } from '@/types';
+import { NamedAPIResourceWithId } from '@/types';
 
 type GetPokemonResponse = {
   count?: number;
