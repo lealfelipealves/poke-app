@@ -2,12 +2,12 @@ import { Pokemon } from 'pokenode-ts'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/services/api';
 
-export async function getPokemonById(pokemonId: string): Promise<Pokemon> {
+export async function getPokemonById(pokemonId: number): Promise<Pokemon> {
   const { data } = await api.get(`pokemon/${pokemonId}`);
   return data
 }
 
-export function usePokemonByIdQuery(pokemonId: string) {
+export function usePokemonByIdQuery(pokemonId: number) {
   return useQuery({
     queryKey: ["pokemon", pokemonId],
     queryFn: () => getPokemonById(pokemonId),

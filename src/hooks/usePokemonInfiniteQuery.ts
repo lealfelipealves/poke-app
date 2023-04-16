@@ -27,7 +27,7 @@ export async function getPokemonWithPagination({ pageParam = 0 }): Promise<Pokem
 
   const resultsFormatted = data.results.map((pokemon: any) => {
     return {
-      id: pokemon.url.split("/")[6],
+      id: Number(pokemon.url.split("/")[6]),
       name: pokemon.name,
       url: pokemon.url,
     }

@@ -5,18 +5,28 @@ import { Dialog, Transition } from "@headlessui/react";
 import { usePokemon } from "@/context/PokemonContext";
 import { useModal } from "@/context/ModalContext";
 import { usePokemonByIdQuery } from "@/hooks/usePokemonByIdQuery";
+import { usePokemonByNameQuery } from "@/hooks/usePokemonByNameQuery";
 import { Spinner } from "../Spinner";
 
 export function Modal() {
   const { pokemon, pokemonId, setPokemon } = usePokemon();
   const { isOpen, setIsOpen } = useModal();
-  const { isLoading, data: pokemonData } = usePokemonByIdQuery(pokemonId);
+
+  const { 
+    isLoading: isLoadingPokemonById,
+    data: dataPokemonById 
+  } = usePokemonByIdQuery(pokemonId);
+
+  const { 
+    isLoading: isLoadingPokemonByName,
+    data: dataPokemonByName
+  } = usePokemonByNameQuery(pokemon?.name || "bulbasaur");
 
   useEffect(() => {
-    if (pokemonData) {
-      setPokemon?.(pokemonData);
+    if (dataPokemonByName) {
+      setPokemon?.(dataPokemonByName);
     }
-  }, [pokemonData, setPokemon]);
+  }, [dataPokemonByName, setPokemon]);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -44,7 +54,7 @@ export function Modal() {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              {isLoading ? (
+              {isLoadingPokemonByName ? (
                 <Spinner />
               ) : (
                 <Dialog.Panel className="w-full flex flex-col gap-4 max-w-fit transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">

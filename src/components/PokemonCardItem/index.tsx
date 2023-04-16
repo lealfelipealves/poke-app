@@ -1,18 +1,23 @@
 import { usePokemon } from '@/context/PokemonContext';
 import { useModal } from '@/context/ModalContext';
 import { PokemonItem } from '@/types';
+import { Pokemon } from 'pokenode-ts';
 
 type PokemonCardItemProps = {
   pokemon: PokemonItem;
 }
 
 export function PokemonCardItem({ pokemon }: PokemonCardItemProps) {
-  const { setPokemonId } = usePokemon()
+  const { setPokemonId, setPokemon, pokemon: pokemonData } = usePokemon()
   const { setIsOpen } = useModal();
 
   function handleOpenModal() {
     setIsOpen(true);
     setPokemonId?.(pokemon.id);
+    setPokemon?.({
+      ...pokemonData,
+      name: pokemon.name,
+    } as Pokemon);
   }
 
   return(

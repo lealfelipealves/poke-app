@@ -7,7 +7,7 @@ export async function getPokemon(): Promise<NamedAPIResourceList> {
 
   const pokemons = data.results.map((pokemon) => {
     return {
-      id: pokemon.url.split('/')[6],
+      id: Number(pokemon.url.split('/')[6]),
       name: pokemon.name,
       url: pokemon.url,        
     }

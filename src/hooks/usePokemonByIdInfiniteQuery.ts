@@ -35,7 +35,7 @@ export async function getPokemonById({ pageParam = 1 }): Promise<GetPokemonRespo
   };
 }
 
-export function usePokemonByIdQuery() {
+export function usePokemonByIdInfiniteQuery() {
   return useInfiniteQuery({
     queryKey: ["pokemonListById"],
     queryFn: getPokemonById,
