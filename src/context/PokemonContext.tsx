@@ -15,7 +15,7 @@ type PokemonContextProviderProps = {
   pokemon?: Pokemon
   setPokemon: (pokemon: Pokemon) => void,
   regionSelected?: Regions
-  setRegionSelected: (region: Regions) => void
+  setRegionSelected: (region?: Regions) => void
 }
 
 export const PokemonContext = createContext<PokemonContextProviderProps>(

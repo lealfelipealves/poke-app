@@ -5,10 +5,11 @@ import { getRegionByName, useRegionByNameQuery } from '@/hooks/useRegionByNameQu
 import { queryClient } from '@/services/queryClient';
 import { Spinner } from '../Spinner';
 import { NamedAPIResourceWithId } from '@/types';
+import { Regions } from 'pokenode-ts';
 
 export function RegionFilter() {
   const { isLoading, data, error } = useRegionsQuery();
-  const { setFilteredData } = usePokemon();
+  const { filteredData, setFilteredData, setRegionSelected, regionSelected } = usePokemon();
 
   const { 
     isFetching: isFetchingRegionByName, 
@@ -27,10 +28,16 @@ export function RegionFilter() {
     });
   }
 
-  async function handleFilterRegion(regionName: string) {
-    const queryKey = ['region', regionName];
-    const data = queryClient.getQueryData<NamedAPIResourceWithId[]>(queryKey);
-    setFilteredData(data!);
+  async function handleFilterRegion(region: NamedAPIResourceWithId) {
+    if(regionSelected && regionSelected === region.id) {
+      setRegionSelected(undefined);
+      setFilteredData(undefined);
+    } else {
+      const queryKey = ['region', region.name];
+      const data = queryClient.getQueryData<NamedAPIResourceWithId[]>(queryKey);
+      setRegionSelected(region.id);
+      setFilteredData(data!);
+    }  
   }
   
   return (
@@ -46,9 +53,9 @@ export function RegionFilter() {
               key={region.name}
               type="button"
               onMouseEnter={() => handlePrefetchRegion(region.name)}
-              onClick={() => handleFilterRegion(region.name)}
+              onClick={() => handleFilterRegion(region)}
             >
-              <div className="flex flex-col items-center justify-center border border-red-500 p-2 rounded-md">
+              <div className={`flex flex-col items-center justify-center border border-red-500 p-2 rounded-md ${region.id === regionSelected ? 'bg-red-500 text-white' : ''}`}>
                 {region.name}
               </div>
             </button>

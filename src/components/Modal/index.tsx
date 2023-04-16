@@ -59,15 +59,12 @@ export function Modal() {
                     </Dialog.Title>
 
                     <div className="flex items-center justify-center gap-4">
-                      <div className="w-96 gap-4 flex flex-col justify-center items-center">
+                      <div className="min-w-min gap-4 flex flex-col justify-center items-center">
                         <Image
                           className="w-full h-full max-h-40"
-                          src={
-                            pokemon?.sprites.other?.dream_world.front_default ||
-                            ""
-                          }
-                          width={100}
-                          height={100}
+                          src={pokemon?.sprites.front_default || ""}
+                          width={96}
+                          height={96}
                           alt={pokemon?.name || "pokemon"}
                           title={pokemon?.name}
                         />
