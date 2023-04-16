@@ -5,11 +5,10 @@ import { getRegionByName, useRegionByNameQuery } from '@/hooks/useRegionByNameQu
 import { queryClient } from '@/services/queryClient';
 import { Spinner } from '../Spinner';
 import { NamedAPIResourceWithId } from '@/types';
-import { Regions } from 'pokenode-ts';
 
 export function RegionFilter() {
   const { isLoading, data, error } = useRegionsQuery();
-  const { filteredData, setFilteredData, setRegionSelected, regionSelected } = usePokemon();
+  const { setFilteredData, setRegionSelected, regionSelected } = usePokemon();
 
   const { 
     isFetching: isFetchingRegionByName, 
@@ -31,7 +30,7 @@ export function RegionFilter() {
   async function handleFilterRegion(region: NamedAPIResourceWithId) {
     if(regionSelected && regionSelected === region.id) {
       setRegionSelected(undefined);
-      setFilteredData(undefined);
+      setFilteredData([]);
     } else {
       const queryKey = ['region', region.name];
       const data = queryClient.getQueryData<NamedAPIResourceWithId[]>(queryKey);

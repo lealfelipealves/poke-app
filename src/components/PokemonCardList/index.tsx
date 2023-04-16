@@ -7,7 +7,7 @@ import { Spinner } from '../Spinner';
 
 export function PokemonCardList() {
   const { ref, inView } = useInView();
-  const { filteredData } = usePokemon();
+  const { filteredData, searchTerm, regionSelected } = usePokemon();
 
   const { 
     data, 
@@ -35,7 +35,7 @@ export function PokemonCardList() {
       ) : (
         <div className="flex flex-col flex-wrap w-full">
           <div className="flex flex-wrap w-full gap-4">
-            {filteredData ? (
+            {(searchTerm || regionSelected) && filteredData ? (
               filteredData?.map((pokemon) => (
                 <PokemonCardItem key={pokemon.name} pokemon={pokemon} />
               ))
