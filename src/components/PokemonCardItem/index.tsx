@@ -1,10 +1,10 @@
 import { usePokemon } from '@/context/PokemonContext';
 import { useModal } from '@/context/ModalContext';
-import { PokemonItem } from '@/types';
+import { NamedAPIResourceWithId } from '@/types';
 import { Pokemon } from 'pokenode-ts';
 
 type PokemonCardItemProps = {
-  pokemon: PokemonItem;
+  pokemon: NamedAPIResourceWithId;
 }
 
 export function PokemonCardItem({ pokemon }: PokemonCardItemProps) {

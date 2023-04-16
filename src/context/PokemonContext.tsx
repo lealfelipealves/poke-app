@@ -1,7 +1,7 @@
 import React, { createContext, useState, useMemo, useContext, useEffect } from 'react';
 import { Pokemon } from 'pokenode-ts'
 import { usePokemonInfiniteQuery } from '@/hooks/usePokemonInfiniteQuery';
-import { PokemonItem } from '@/types';
+import { NamedAPIResourceWithId } from '@/types';
 
 type PokemonContextProps = {
   children: React.ReactNode
@@ -10,8 +10,8 @@ type PokemonContextProps = {
 type PokemonContextProviderProps = {
   searchTerm?: string
   setSearchTerm: (searchTerm: string) => void,
-  filteredData?: PokemonItem[],
-  setFilteredData?: (pokemonList: PokemonItem[]) => void,
+  filteredData?: NamedAPIResourceWithId[],
+  setFilteredData?: (pokemonList: NamedAPIResourceWithId[]) => void,
   pokemon?: Pokemon
   setPokemon?: (pokemon: Pokemon) => void,
 }
@@ -25,7 +25,7 @@ export const PokemonProvider = ({ children }: PokemonContextProps) => {
   const { data } = usePokemonInfiniteQuery();
   
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState<PokemonItem[]>([]);
+  const [filteredData, setFilteredData] = useState<NamedAPIResourceWithId[]>([]);
   const [pokemon, setPokemon] = useState<Pokemon>();
 
   const filterData = () => {

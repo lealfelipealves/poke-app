@@ -1,9 +1,9 @@
 import { NamedAPIResource, NamedAPIResourceList } from "pokenode-ts";
 
-export interface PokemonItem extends NamedAPIResource {
+export interface NamedAPIResourceWithId extends NamedAPIResource {
   id: number;
 }
 
-export interface PokemonList extends NamedAPIResourceList {
-  results: PokemonItem[];
+export interface NamedAPIResourceListWithId extends NamedAPIResourceList {
+  results: NamedAPIResourceWithId[];
 }
