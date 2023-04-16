@@ -1,5 +1,5 @@
 import React, { createContext, useState, useMemo, useContext, useEffect } from 'react';
-import { Pokemon } from 'pokenode-ts'
+import { Pokemon, Regions } from 'pokenode-ts'
 import { usePokemonInfiniteQuery } from '@/hooks/usePokemonInfiniteQuery';
 import { NamedAPIResourceWithId } from '@/types';
 
@@ -11,9 +11,11 @@ type PokemonContextProviderProps = {
   searchTerm?: string
   setSearchTerm: (searchTerm: string) => void,
   filteredData?: NamedAPIResourceWithId[],
-  setFilteredData?: (pokemonList: NamedAPIResourceWithId[]) => void,
+  setFilteredData: (pokemonList: NamedAPIResourceWithId[]) => void,
   pokemon?: Pokemon
-  setPokemon?: (pokemon: Pokemon) => void,
+  setPokemon: (pokemon: Pokemon) => void,
+  regionSelected?: Regions
+  setRegionSelected: (region: Regions) => void
 }
 
 export const PokemonContext = createContext<PokemonContextProviderProps>(
@@ -27,6 +29,8 @@ export const PokemonProvider = ({ children }: PokemonContextProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState<NamedAPIResourceWithId[]>([]);
   const [pokemon, setPokemon] = useState<Pokemon>();
+  
+  const [regionSelected, setRegionSelected] = useState<Regions | undefined>();
 
   const filterData = () => {
     const filtered = data?.pages.flatMap((page) =>

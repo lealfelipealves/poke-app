@@ -2,8 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 import { Region, Pokedex, NamedAPIResource } from 'pokenode-ts'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/services/api';
+import { NamedAPIResourceWithId } from '@/types';
 
-export async function getRegionByName(regionName: string): Promise<NamedAPIResource[]> {
+export async function getRegionByName(regionName: string): Promise<NamedAPIResourceWithId[]> {
   let endpoints = [];
   const response = await api.get<Region>(`region/${regionName}`);
 
@@ -29,8 +30,16 @@ export async function getRegionByName(regionName: string): Promise<NamedAPIResou
       return !acc.find(obj => obj.name === species.name);
     }));
   }, []);
-  
-  return pokemonSpecies;
+
+  const pokemons = pokemonSpecies.map(species => {
+    return {
+      id: Number(species.url.split('/')[species.url.split('/').length - 2]),
+      name: species.name,
+      url: species.url,
+    }
+  });
+
+  return pokemons;
 }
 
 export function useRegionByNameQuery(regionName: string) {

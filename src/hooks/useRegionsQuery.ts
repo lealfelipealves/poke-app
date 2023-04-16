@@ -13,9 +13,9 @@ export async function getRegions(): Promise<GetPokemonResponse> {
 
   const regions: NamedAPIResourceWithId[] = data.results.map((pokemon: any) => {
     return {
+      id: pokemon.url.split('/')[pokemon.url.split('/').length - 2],
       name: pokemon.name,
       url: pokemon.url,
-      id: pokemon.url.split('/')[pokemon.url.split('/').length - 2],
     }
   });
 
