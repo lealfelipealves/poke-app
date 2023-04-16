@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { PokemonContext } from '@/context/PokemonContext';
 import { Header } from './index';
 
-describe('Spinner', () => {
+describe('Header', () => {
   it('renders search input', () => {
     render(<Header />);
     const searchInput = screen.getByPlaceholderText('Search');

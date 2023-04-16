@@ -22,7 +22,7 @@ type PokemonContextProviderProps = {
   setPokemon?: (pokemon: Pokemon) => void;
   regionSelected?: Regions;
   setRegionSelected?: (region?: Regions) => void;
-  currentPokemonList: NamedAPIResourceWithId[];
+  currentPokemonList?: NamedAPIResourceWithId[];
   filteredDataByRegion?: NamedAPIResourceWithId[];
   setFilteredDataByRegion?: (pokemonList: NamedAPIResourceWithId[]) => void;
 };

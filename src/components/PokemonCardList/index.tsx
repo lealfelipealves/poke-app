@@ -45,7 +45,7 @@ export function PokemonCardList() {
         <div className="flex flex-col flex-wrap w-full">
           <div className="flex flex-wrap w-full gap-4">
             <div className="flex w-full flex-wrap gap-4">
-              {currentPokemonList.map((pokemon) => (
+              {currentPokemonList?.map((pokemon) => (
                 <PokemonCardItem key={pokemon.name} pokemon={pokemon} />
               ))}
               <button
