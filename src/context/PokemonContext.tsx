@@ -28,8 +28,7 @@ export const PokemonProvider = ({ children }: PokemonContextProps) => {
   
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState<NamedAPIResourceWithId[]>([]);
-  const [pokemon, setPokemon] = useState<Pokemon>();
-  
+  const [pokemon, setPokemon] = useState<Pokemon>();  
   const [regionSelected, setRegionSelected] = useState<Regions | undefined>();
 
   const filterData = () => {
@@ -48,11 +47,13 @@ export const PokemonProvider = ({ children }: PokemonContextProps) => {
   const pokemonValue = useMemo(() => ({
     searchTerm, setSearchTerm,
     pokemon, setPokemon,
-    filteredData, setFilteredData
+    filteredData, setFilteredData,
+    regionSelected, setRegionSelected
   }), [
     searchTerm, setSearchTerm,
     pokemon, setPokemon,
-    filteredData, setFilteredData
+    filteredData, setFilteredData,
+    regionSelected, setRegionSelected
   ]);
 
   return (
