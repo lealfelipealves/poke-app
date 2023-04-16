@@ -8,12 +8,11 @@ type PokemonCardItemProps = {
 }
 
 export function PokemonCardItem({ pokemon }: PokemonCardItemProps) {
-  const { setPokemonId, setPokemon, pokemon: pokemonData } = usePokemon()
+  const { setPokemon, pokemon: pokemonData } = usePokemon()
   const { setIsOpen } = useModal();
 
   function handleOpenModal() {
     setIsOpen(true);
-    setPokemonId?.(pokemon.id);
     setPokemon?.({
       ...pokemonData,
       name: pokemon.name,

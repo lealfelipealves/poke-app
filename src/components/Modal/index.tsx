@@ -4,18 +4,12 @@ import { Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { usePokemon } from "@/context/PokemonContext";
 import { useModal } from "@/context/ModalContext";
-import { usePokemonByIdQuery } from "@/hooks/usePokemonByIdQuery";
 import { usePokemonByNameQuery } from "@/hooks/usePokemonByNameQuery";
 import { Spinner } from "../Spinner";
 
 export function Modal() {
-  const { pokemon, pokemonId, setPokemon } = usePokemon();
+  const { pokemon, setPokemon } = usePokemon();
   const { isOpen, setIsOpen } = useModal();
-
-  const { 
-    isLoading: isLoadingPokemonById,
-    data: dataPokemonById 
-  } = usePokemonByIdQuery(pokemonId);
 
   const { 
     isLoading: isLoadingPokemonByName,
