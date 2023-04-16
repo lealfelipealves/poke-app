@@ -8,11 +8,8 @@ import { Error } from "../Error";
 
 export function PokemonCardList() {
   const { ref, inView } = useInView();
-  const { filteredData, searchTerm, regionSelected, currentPokemonList } =
-    usePokemon();
-
+  const { currentPokemonList } = usePokemon();
   const {
-    data,
     isError,
     isLoading,
     isFetching,
