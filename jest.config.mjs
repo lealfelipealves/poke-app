@@ -15,6 +15,14 @@ const config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  coverageThreshold: {
+    global: {
+      statements: 75,
+      branches: 75,
+      functions: 75,
+      lines: 75
+    }
+  }
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
