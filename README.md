@@ -60,6 +60,13 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [Testing Library](https://testing-library.com/)
 - [React Query](https://tanstack.com/query/v3/)
 
+### Screenshot
+![image](https://user-images.githubusercontent.com/17007124/232359693-9f242281-cd57-4bd5-983f-bd3a05df4a68.png)
+
+
+### Cobertura de teste unitarios
+![image](https://user-images.githubusercontent.com/17007124/232359565-cdf18c65-5d8d-44ed-8073-fa65fa36f7f7.png)
+
 ### Autor
 
 ---
