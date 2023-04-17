@@ -58,6 +58,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [Axios](https://axios-http.com/ptbr/docs/intro)
 - [Jest](https://jestjs.io/pt-BR/)
 - [Testing Library](https://testing-library.com/)
+- [React Query](https://tanstack.com/query/v3/)
 
 ### Autor
 
