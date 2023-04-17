@@ -3,7 +3,7 @@
 > Aplicativo React para mostrar informações
 > de Pokémons
 
-<div style="margin: 0 auto; width: 100%; max-width: 300px;">
+<div style="width: 100%;">
 <img alt="pokeapi logo" src="public/images/pokeapi_256.png" style="margin: 0 auto;"/>
 </div>
 
@@ -66,6 +66,6 @@ As seguintes ferramentas foram usadas na construção do projeto:
  <br />
  <sub><b>Felipe Leal</b></sub></a> <a href="https://github.com/lealfelipealves" title="Felipe Leal Profile">🚀</a>
 
-Feito com ❤️ por Felipe Leal 👋🏽
+Feito por Felipe Leal 👋🏽
 
 [![Gmail Badge](https://img.shields.io/badge/-contato@felipeleal.eng.br-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:contato@felipeleal.eng.br)](mailto:contato@felipeleal.eng.br)
