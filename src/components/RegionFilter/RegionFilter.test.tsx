@@ -1,65 +1,146 @@
-import "@testing-library/jest-dom";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { RegionFilter } from "./index";
-import { queryClient } from "@/services/queryClient";
-import { data } from "@/mocks/regions";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { ModalContext } from "@/context/ModalContext";
+import { render, fireEvent, screen, act } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PokemonContext } from "@/context/PokemonContext";
-import { bulbasaur } from "@/mocks/bulbasaur";
-import React from "react";
-import { useQuery } from '@tanstack/react-query';
+import { RegionFilter } from "@/components/RegionFilter";
+import { useRegionsQuery } from "@/hooks/useRegionsQuery";
+import { useRegionByNameQuery } from "@/hooks/useRegionByNameQuery";
+import { queryClient } from "@/services/queryClient";
+import { regions } from "@/mocks/regions";
 
-jest.mock('@tanstack/react-query');
+jest.mock("@/hooks/useRegionsQuery");
+/*jest.mock("@/hooks/useRegionByNameQuery");
+jest.mock("@/context/PokemonContext");*/
 
 describe("RegionFilter", () => {
-  it("renders correctly", async () => {
-    const isOpen = true;
-    const pokemon = bulbasaur;
-    const setIsOpen = jest.fn();
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+  
 
-    queryClient.setQueryData(["regions"], data);
+  it("renders loading spinner while regions are being fetched", () => {
+    useRegionsQuery.mockReturnValue({ isLoading: true });
 
-    const Wrapper = ({ children }: any) => {
-      return (
-        <QueryClientProvider client={queryClient}>
-          <PokemonContext.Provider value={{ pokemon }}>
-            <ModalContext.Provider value={{ isOpen, setIsOpen }}>
-              {children}
-            </ModalContext.Provider>
-          </PokemonContext.Provider>
-        </QueryClientProvider>
-      );
-    };
+    render(
+      <QueryClientProvider client={queryClient}>
+        <PokemonContext.Provider value={{}}>
+          <RegionFilter />
+        </PokemonContext.Provider>
+      </QueryClientProvider>
+    );
 
-    const setStateMock = jest.fn();
-    const useStateMock: any = (useState: any) => [useState, setStateMock];
-    jest.spyOn(React, "useState").mockImplementation(useStateMock);
+    expect(screen.getByTestId("region-filter-loading")).toBeInTheDocument();
+  });
 
-    useQuery.mockReturnValue({
+  it("renders error spinner while regions are being fetched", () => {
+    useRegionsQuery.mockReturnValue({ isError: true });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <PokemonContext.Provider value={{}}>
+          <RegionFilter />
+        </PokemonContext.Provider>
+      </QueryClientProvider>
+    );
+
+    expect(screen.getByTestId("region-filter-error")).toBeInTheDocument();
+  });
+
+  it("renders correctly", () => {
+    const data = {
+      count: regions.count,
+      regions: regions.results
+    }
+    useRegionsQuery.mockReturnValue({ data });
+
+    const { getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <PokemonContext.Provider value={{}}>
+          <RegionFilter />
+        </PokemonContext.Provider>
+      </QueryClientProvider>
+    );
+
+    data.regions.forEach((region) => {
+      expect(getByText(region.name)).toBeInTheDocument();
+    });
+  });
+
+  it("should call setFilteredDataByRegion when button is clicked", async () => {
+    const data = {
+      count: regions.count,
+      regions: regions.results
+    }
+    
+    useRegionsQuery.mockReturnValue({ 
+      isError: false,
       isLoading: false,
-      data,
-      error: false,
+      isFetching: false,
+      data
     });
 
-    const { container, debug, getByText  } = render(<RegionFilter />, { wrapper: Wrapper });
-    expect(container).toMatchSnapshot();
-
-    // const regionButton = await screen.getByRole("button", {
-    //   name: /kanto/i,
-    // });
-
-    // fireEvent.click(regionButton);
-
-    // expect(regionButton).toHaveClass('bg-red-500 text-white'); // verifique se o botão foi selecionado
-    // // expect(setStateMock).toEqual('kanto');
-    // expect(setStateMock).toBeCalled();
+    const setFilteredDataByRegion = jest.fn();
+    const setRegionSelected = jest.fn();
     
+    const { getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <PokemonContext.Provider
+          value={{ setFilteredDataByRegion, setRegionSelected }}
+        >
+          <RegionFilter />
+        </PokemonContext.Provider>
+      </QueryClientProvider>
+    );
+    const kantoButton = getByText("kanto");
 
-      // const setRegionSelected = jest.fn();
+    await act(async () => {
+      fireEvent.click(kantoButton);
+    });
 
+    expect(setRegionSelected).toHaveBeenCalledWith(1);
+    expect(setFilteredDataByRegion).toHaveBeenCalled();
+  });
 
-    debug()
-
+  it("should call setFilteredDataByRegion with empty array when the same region is clicked", async () => {
+    const data = {
+      count: regions.count,
+      regions: regions.results,
+    };
+  
+    useRegionsQuery.mockReturnValue({
+      isError: false,
+      isLoading: false,
+      isFetching: false,
+      data,
+    });
+  
+    const setFilteredDataByRegion = jest.fn();
+    const setRegionSelected = jest.fn().mockImplementation((regionId) => {
+      // Simulate setting the regionSelected state
+      regionSelected = regionId;
+    });
+  
+    let regionSelected = 1;
+  
+    const { getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <PokemonContext.Provider
+          value={{ setFilteredDataByRegion, setRegionSelected, regionSelected }}
+        >
+          <RegionFilter />
+        </PokemonContext.Provider>
+      </QueryClientProvider>
+    );
+  
+    const kantoButton = getByText("kanto");
+  
+    await act(async () => {
+      fireEvent.click(kantoButton);
+    });
+  
+    // Check that setRegionSelected is called with undefined
+    expect(setRegionSelected).toHaveBeenCalledWith(undefined);
+  
+    // Check that setFilteredDataByRegion is called with an empty array
+    expect(setFilteredDataByRegion).toHaveBeenCalledWith([]);
   });
 });

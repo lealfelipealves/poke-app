@@ -1,4 +1,6 @@
-export const bulbasaur = {
+import { Pokemon } from "pokenode-ts";
+
+export const bulbasaur:Pokemon = {
   abilities: [
     {
       ability: {
