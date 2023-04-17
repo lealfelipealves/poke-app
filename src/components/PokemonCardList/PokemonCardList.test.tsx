@@ -1,8 +1,8 @@
-import { render, fireEvent, getByTestId } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { PokemonCardList } from './index';
 import { usePokemonInfiniteQuery } from "@/hooks/usePokemonInfiniteQuery";
-import { PokemonContext, PokemonProvider, usePokemon } from "@/context/PokemonContext";
+import { PokemonContext, usePokemon } from "@/context/PokemonContext";
 
 import { pokemon } from '@/mocks/pokemon'
 
@@ -101,7 +101,6 @@ describe('PokemonCardList', () => {
         </PokemonContext.Provider>
       </QueryClientProvider>
     );
-
 
     expect(getByTestId("pokemon-card-list-loading")).toBeInTheDocument();
   });

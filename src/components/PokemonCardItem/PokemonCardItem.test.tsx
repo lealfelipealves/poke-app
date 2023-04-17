@@ -37,7 +37,7 @@ describe('PokemonCardItem', () => {
     render(<PokemonCardItem pokemon={pokemon} />);
   });
 
-  test('should call setPokemon and setIsOpen with the correct arguments when clicked', () => {
+  it('should call setPokemon and setIsOpen with the correct arguments when clicked', () => {
     fireEvent.click(screen.getByTestId('pokemon-card-item'));
 
     expect(setIsOpen).toHaveBeenCalledWith(true);

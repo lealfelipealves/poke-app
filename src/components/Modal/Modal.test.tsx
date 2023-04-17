@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query'
-
 import { ModalContext } from '@/context/ModalContext'
 import { PokemonContext } from '@/context/PokemonContext';
 import { bulbasaur } from '@/mocks/bulbasaur'

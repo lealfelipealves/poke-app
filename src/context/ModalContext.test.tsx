@@ -2,7 +2,6 @@ import { renderHook } from "@testing-library/react-hooks";
 import { ModalContext, ModalProvider, useModal } from "./ModalContext";
 import { queryClient } from "@/services/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { act } from "react-dom/test-utils";
 
 describe("ModalContext", () => {
 
