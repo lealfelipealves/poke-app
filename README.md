@@ -3,9 +3,11 @@
 > Aplicativo React para mostrar informações
 > de Pokémons
 
-<div style="width: 100%;">
-<img alt="pokeapi logo" src="public/images/pokeapi_256.png" style="margin: 0 auto;"/>
-</div>
+<h1 align="center">
+  <br>
+  <img src="public/images/pokeapi_256.png" alt="pokeapi logo" height="125" width="300">
+  <br>
+</h1>
 
 <h4 align="center"> 
 	🚧  Aplicativo React para mostrar informações
